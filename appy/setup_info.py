@@ -1,18 +1,31 @@
 SETUP_INFO = dict(
-    name='appypod',
+    name='appy',  # not published on PyPI
     version='0.1',
-    # install_requires=[],
-    description="appy.pod for Python 3",
+    description="appy.pod for Python 3 (Luc)",
     license='Free BSD',
-    # test_suite='tests',
+    test_suite='tests',
     author='Luc Saffre',
     author_email='luc@saffre-rumma.net',
     url="http://appypod.lino-framework.org",
+    install_requires = ['future'],
     long_description="""\
 
-The `appypod` project is a partial redistribution of Gaetan Delannay's
-`Appy framework <http://appyframework.org/>`__ in order to make
-`appy.pod` available under Python 3.
+The `appypod` project is a partial and meanwhile obsolete
+redistribution of Gaetan Delannay's `Appy framework
+<http://appyframework.org/>`__ in order to make `appy.pod` available
+under Python 3.
+
+This project is no longer needed.  To use the author's development
+version you can now specify the following in your a `requirements.txt
+<https://pip.readthedocs.io/en/1.1/requirements.html>`__ file::
+
+    -e svn+https://svn.forge.pallavi.be/appy-dev/dev1#egg=appy
+
+See `my blog <http://luc.lino-framework.org/blog/2018/0510.html>`__
+for details. 
+
+The remaining text is no longer relevant.
+
 
 Note that it is only an *excerpt* of the full Appy framework: the
 `pod` subpackage and a few others which are needed for pod: utils,
@@ -20,7 +33,7 @@ model, ui, http and xml.
 
 **Why**
 
-Gaetan is advancing with porting his appy framework to Python 3, and
+Gaetan is advancing with porting his Appy framework to Python 3, and
 his work is published on `forge.pallavi.be
 <https://forge.pallavi.be/projects/appy-python-3>`__, and we can
 easily check out a copy of the repository::
@@ -33,13 +46,23 @@ has no file `setup.py`.  Gaetan "installs" it by adding into his
 repository.  We therefore cannot specify it in a `requirements.txt
 <https://pip.readthedocs.io/en/1.1/requirements.html>`__ file.
 
-Stefan Klug started a similar attempt in 2015:
-https://github.com/stefanklug/appypod
+The only benefit of this fork is that you can add it to your
+:file:`requirements.txt` file::
 
+  git+https://github.com/lino-framework/appypod.git#egg=appy
+
+A clear disadvantage of this fork is that it is behind the original.
+Gaetan continues to work on *appy-python-3*, and Luc has no plans to
+keep up-to-date.  Both G and L and working on a solution.
+
+This repository also adds a minimal test suite, but it is also being
+tested in the test suite of the Lino framework at
+https://travis-ci.org/lino-framework/book
 
 **Manual changes by LS**
 
-I added a file setup.py, tasks.py and appy/setup_info.py
+I added files :file:`setup.py`, :file:`tasks.py`,
+:file:`tests/__init__.py` and :file:`appy/setup_info.py`.
 
 I manually fixed the following places which had trivial errors::
 
@@ -65,6 +88,14 @@ I manually fixed the following places which had trivial errors::
                    ^
   SyntaxError: Missing parentheses in call to 'exec'
 
+**Others**
+
+Christian Jauvin contributed a fix to this distribution.
+
+Stefan Klug started a similar attempt in 2015:
+https://github.com/stefanklug/appypod
+
+
 
 """,
     classifiers="""\
@@ -80,8 +111,24 @@ Operating System :: OS Independent""".splitlines())
 SETUP_INFO.update(packages=[n for n in """
 appy
 appy.pod
+appy.pod.test
+appy.pod.test.contexts
+appy.http
+appy.model
+appy.model.fields
+appy.px
+appy.ui
+appy.utils
+appy.xml
 """.splitlines() if n])
 
-SETUP_INFO.update(package_data=dict())
+SETUP_INFO.update(package_data=dict(), include_package_data=True)
 
+def add_package_data(package, *patterns):
+    l = SETUP_INFO['package_data'].setdefault(package, [])
+    l.extend(patterns)
+    return l
+
+
+add_package_data('appy.pod', '*.xmlt')
 

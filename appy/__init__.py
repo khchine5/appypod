@@ -29,3 +29,4 @@ class Config:
     # Place here a appy.ui.Config instance defining user-interface options
     ui = None
 # ------------------------------------------------------------------------------
+
